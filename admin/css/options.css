@@ -1,0 +1,41 @@
+form{
+  margin-bottom: 1em;
+}
+
+ul {
+  display: table;
+}
+
+li {
+  display: table-row;
+}
+
+label,
+input {
+  display: table-cell;
+}
+
+.float_right {
+  float: right;
+}
+
+.emphasised {
+  font-weight: bold;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.code{
+  font-family: 'Courier New', Courier, monospace
+}
+
+.button-primary{
+  width:8em;
+}
+
+.help-block.form-error{
+  color: red;
+  padding-left: 1em;
+}

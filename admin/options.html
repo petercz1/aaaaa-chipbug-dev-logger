@@ -1,0 +1,55 @@
+<div class="wrap">
+  <h1>WP development logger 2.0: options</h1>
+  <form>
+    <ul>
+      <label for="size_of_log">Max no of lines for human log (/wp_content/log.txt): </label>
+      <input id="size_of_log" type='number' data-validation="number" data-validation-error-msg="Integer required"
+        maxlength="45" size="10" name="size_of_log" value="" />
+      </li>
+      <li>
+        <label for="include_trace">Include stack trace in errors:</label>
+        <input id="include_trace" type='checkbox' name="include_trace" />
+      </li>
+      <li>
+        <label for="include_file_path">Include full file path with filenames:</label>
+        <input id="include_file_path" type='checkbox' name="include_file_path" />
+      </li>
+      <li><button class="button-primary" id="save_options">save options</button><span id="error"></span></li>
+    </ul>
+  </form>
+
+  <h2>How to use</h2>
+  <p>Click on Developer > Developer logger.</p>
+  <p>This will open a second tab, so the php logger will keep working if your development tab crashes.</p>
+  <p>The logger will capture all 15 php errors and report them. There are three color codes:</p>
+  <ul>
+    <li>Entries in RED mean that your script crashed before completion</li>
+    <li>Entries in BLUE mean your script completed but there are warnings</li>
+    <li>Entries in GREEN are your logger entries</li>
+  </ul>
+  <p>Use the function <span class="bold">writelog()</span> to record your own logging activities.</p>
+  <p>You can log any php type - string, integer, array, object etc eg</p>
+  <ul class="code">
+    <li>writelog('code is ok up to here');</li>
+    <li>writelog(45);</li>
+    <li>writelog(array('name'=>'bill', 'age'=>45);</li>
+    <li>writelog($var);</li>
+  </ul>
+
+  <h2>MySQL</h2>
+  <p>This logger will also capture the last error emitted by MySQL.</p>
+  <p>It uses an obscure variable called $EZSQL_ERROR</p>
+  <p>When your script(s) finish running the plugin checks whether WordPress has populated this. If so, it gets reported</p>
+
+  <h2>human-readable log</h2>
+  <p>In addition to generating a log that shows up on the logger browser tab, this plugin
+    generates a human-readable text file at your_wordpress_directory/wp-content/log.txt</p>
+  <p>Depending on how advanced your understanding of logging is, you can also track reporting in log.txt as follows.
+    Assuming you can open a console window and navigate to 'your_wp_install_directory/wp_content' :</p>
+  <ul>
+    <li>Windows: c:>\your_wordpress_directory\wp_content> <span class="emphasised">more +1 log.txt</span></li>
+    <li>Mac: /your_wordpress_directory/wp_content> <span class="emphasised">tail -F log.txt</span></li>
+    <li>Linux: /your_wordpress_directory/wp_content> <span class="emphasised">tail -f log.txt</span></li>
+    </li>
+  </ul>
+</div>

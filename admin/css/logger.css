@@ -1,0 +1,59 @@
+#logger-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.emphasised {
+  font-weight: bold;
+}
+
+.item {
+  width: 90%;
+  padding: 0.5em 0.5em;
+  border-bottom: 1px solid lightgray;
+}
+
+.php_new_log {
+  background-color: lightgreen;
+}
+
+.php_mysql {
+  background-color: lightblue;
+}
+
+.float_right {
+  float: right;
+}
+
+#errors {
+  width: 75%;
+}
+
+#errors tr {
+  border-collapse: collapse;
+}
+
+.php_user_notice,
+.php_developer {
+  color: green;
+}
+
+.php_warning,
+.php_notice,
+.php_deprecated,
+.php_recoverable_error,
+.php_user_deprecated,
+.php_user_error,
+.php_user_warning {
+  color: blue;
+}
+
+.php_parse,
+.php_compile_error,
+.php_compile_warning,
+.php_core_error,
+.php_core_warning,
+.php_error,
+.php_strict {
+  color: red;
+}
