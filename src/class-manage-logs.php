@@ -19,7 +19,7 @@ class Manage_Logs
     public function init(Write_Json $write_json, Write_Human $write_human)
     {
         $this->write_json = $write_json;
-        $this->write_json->init(new \Chipbug\Tools\Logger\Tidy_Text());
+        $this->write_json->init(new \Chipbug\Tools\Logger\Tidy_Json_Text());
         $this->write_human = $write_human;
         $this->write_human->init(new \Chipbug\Tools\Logger\Tidy_Text());
     }

@@ -20,6 +20,7 @@ return array(
     'Chipbug\\Tools\\Logger\\Set_Files' => $baseDir . '/src/class-set-files.php',
     'Chipbug\\Tools\\Logger\\Setup' => $baseDir . '/src/class-setup.php',
     'Chipbug\\Tools\\Logger\\Sse_Log' => $baseDir . '/src/class-sse-log.php',
+    'Chipbug\\Tools\\Logger\\Tidy_Json_Text' => $baseDir . '/src/class-tidy-json-text.php',
     'Chipbug\\Tools\\Logger\\Tidy_Text' => $baseDir . '/src/class-tidy-text.php',
     'Chipbug\\Tools\\Logger\\Uninstall_Logger' => $baseDir . '/src/class-uninstall.php',
     'Chipbug\\Tools\\Logger\\Write_Human' => $baseDir . '/src/class-write-human.php',

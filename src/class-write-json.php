@@ -10,7 +10,7 @@ class Write_Json
 {
     public $tidy;
 
-    public function init(Tidy_Text $tidy)
+    public function init(Tidy_Json_Text $tidy)
     {        
         $this->tidy = $tidy;
         $check_log_length = new \Chipbug\Tools\Logger\Check_Log_length();
@@ -28,12 +28,12 @@ class Write_Json
         // JSON-READABLE: add record to wp-content/log.json - sent to browser
         // color code message details, remove 'confusing' text
         if (isset($message['details']) && !is_array($message['details'])) {
-            $message['details'] = $this->tidy->add_color_tag($message['details']);
-            $message['details'] = $this->tidy->remove_text($message['details']);
+            $message['details'] = $this->tidy->clean($message['details']);
+            //$message['details'] = $this->tidy->remove_text($message['details']);
         }
         if (isset($message['file'])) {
             // $message['file'] = str_replace(ABSPATH, '', $message['file']);
-            $message['file'] = $this->tidy->remove_text($message['file']);
+            $message['file'] = $this->tidy->clean($message['file']);
         }
         try {
             if (!\file_exists(ABSPATH . '/wp-content/log.json')) {

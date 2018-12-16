@@ -9,8 +9,9 @@ defined('ABSPATH') or die('No script kiddies please!');
 class Tidy_Text
 {
     private $options = array();
-    private $path = ABSPATH;
-    private $trace = "";
+    private $trace = 'false';
+    private $path = 'false';
+    private $file_path;
 
     public function __construct()
     {
@@ -18,8 +19,8 @@ class Tidy_Text
 
         $this->options = unserialize($this->options);
 
-        if ('true' == $this->options['include_file_path']) {
-            $this->path = '';
+        if ('false' == $this->options['include_file_path']) {
+            $this->file_path = $this->options['file_path'];
         }
         if ('true' == $this->options['include_trace']) {
             $this->trace = "$1";
@@ -35,6 +36,7 @@ class Tidy_Text
     public function add_color_tag(string $details)
     {
         $terms = [
+            '/#/',
             '/Call to undefined(.*?)/',
             '/method/',
             '/function/',
@@ -45,6 +47,7 @@ class Tidy_Text
             '/#[\s\S]*$/',
         ];
         $emphasised = [
+            '<br>',
             '<span class="emphasised">Call to undefined</span> $1',
             '<span class="emphasised">method</span>',
             '<span class="emphasised">function</span>',
@@ -68,26 +71,20 @@ class Tidy_Text
     {
         //$path = ABSPATH;
         $terms = [
-            "#$this->path#",
-            // "/Stack trace:[\s\S]*$/",
+            "#$this->file_path#",
+            //"/Stack trace:[\s\S]*$/",
             // '/Class(.*?)not found[\s\S]*$/',
             // '/Call to a member function (.*?) on null[\s\S]*$/',
             // '/Call to undefined(.*?) in[\s\S]*$/',
         ];
         $removed = [
             '',
-            "$this->trace",
+            //"$this->trace",
             // 'Class $1 not found',
             // 'Call to a member function $1',
             // 'Call to undefined $1',
         ];
-        error_log(print_r($terms, true));
-        error_log(print_r($removed, true));
-        error_log(print_r($this->options, true));
-        error_log('path: ' . $this->path);
-        error_log('trace: ' . $this->trace);
         $details = \preg_replace($terms, $removed, $details);
-        error_log($details);
         return $details;
     }
 }

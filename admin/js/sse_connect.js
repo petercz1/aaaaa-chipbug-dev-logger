@@ -55,7 +55,7 @@
 
       } else {
         var css_class = 'php_' + data[counter].error_name.toLowerCase().replace(/ /g, "_");
-        line_one = '<div class="' + css_class + '">' + "line " + data[counter].line_no + ", " + data[counter].error_name + ": " + data[counter].details + '</div>';
+        line_one = '<div class="' + css_class + '">' + "line " + data[counter].line_no + ", " +  ": " + data[counter].details + '</div>';
         line_two = '<div class="details">' + "file: " + data[counter].file + '</div>';
       }
 

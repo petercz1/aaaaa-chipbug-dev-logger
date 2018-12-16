@@ -35,6 +35,7 @@ class ComposerStaticInit51930e2f6aa30cad08bb5627968aecd4
         'Chipbug\\Tools\\Logger\\Set_Files' => __DIR__ . '/../..' . '/src/class-set-files.php',
         'Chipbug\\Tools\\Logger\\Setup' => __DIR__ . '/../..' . '/src/class-setup.php',
         'Chipbug\\Tools\\Logger\\Sse_Log' => __DIR__ . '/../..' . '/src/class-sse-log.php',
+        'Chipbug\\Tools\\Logger\\Tidy_Json_Text' => __DIR__ . '/../..' . '/src/class-tidy-json-text.php',
         'Chipbug\\Tools\\Logger\\Tidy_Text' => __DIR__ . '/../..' . '/src/class-tidy-text.php',
         'Chipbug\\Tools\\Logger\\Uninstall_Logger' => __DIR__ . '/../..' . '/src/class-uninstall.php',
         'Chipbug\\Tools\\Logger\\Write_Human' => __DIR__ . '/../..' . '/src/class-write-human.php',

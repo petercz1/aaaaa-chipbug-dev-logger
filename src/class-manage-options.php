@@ -14,7 +14,6 @@ class Manage_Options
      * @var Manage_Options
      */
     private $manage_options;
-
     /**
      * initialise
      *
@@ -59,19 +58,23 @@ class Manage_Options
     */
     public function save_options()
     {
-        \sleep(2);
+        // TODO - remove before release!
+        \sleep(1);
         $error_message = '';
         try {
             if ($this->check_nonce()) {
-				$options = array(
-					'size_of_log'=>100,
-				);
+                // TODO - split this out for each option!
+                // TODO - code for size of log
+                // TODO - code for refresh rate
 				if(isset($_POST['size_of_log']) && \is_numeric($_POST['size_of_log'])){
+					$options['refresh_rate'] = $_POST['refresh_rate'];
 					$options['size_of_log'] = $_POST['size_of_log'];
 					$options['include_trace'] = $_POST['include_trace'];
-					$options['include_file_path'] = $_POST['include_file_path'];
+                    $options['include_file_path'] = $_POST['include_file_path'];
+                    $options['file_path'] = get_home_path();
+                    
                 }
-                error_log(print_r($options, true));
+                error_log(print_r($_POST, true));
                 file_put_contents(  __DIR__ . '/serialized_options.txt', serialize( $options ) );
 				//update_option('chipbug_logger_options', $options);
             }

@@ -30,6 +30,7 @@
       results = JSON.parse(results);
       console.log(results);
       $('#size_of_log').val(results.size_of_log);
+      $('#refresh_rate').val(results.refresh_rate);
       if ('true' == results.include_trace) {
         $('#include_trace').prop('checked', true);
       } else {
@@ -65,6 +66,7 @@
       'action': 'save_options',
       'options_nonce': chipbug_dev.options_nonce,
       'size_of_log': $('#size_of_log').val(),
+      'refresh_rate': $('#refresh_rate').val(),
       'include_trace': $('#include_trace').is(':checked'),
       'include_file_path': $('#include_file_path').is(':checked')
     };

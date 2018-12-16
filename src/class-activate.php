@@ -72,9 +72,11 @@ class Activate_Logger
 
         $options = array(
             'refresh_rate'=>500,
-            'size_of_log'=>100,
+            "include_trace" => 'false',
+            "size_of_log" => 100,
+            "include_file_path" => 'false',
+            "file_path" =>  get_home_path()
         );
-        update_option('chipbug_logger_options', $options);
         file_put_contents( __DIR__ . '/serialized_options.txt', serialize( $options ) );
     }
 
