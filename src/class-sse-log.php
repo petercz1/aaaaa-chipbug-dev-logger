@@ -24,7 +24,7 @@ class Sse_Log
 
             $options = \file_get_contents( __DIR__ . '/serialized_options.txt');
             $options = unserialize($options);
-                        $refresh_rate = $options['refresh_rate'];
+            $refresh_rate = $options['refresh_rate'];
 
             if (\file_exists($_SERVER['DOCUMENT_ROOT'] . '/wp-content/log.json')) {
                 $this->data = \file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/wp-content/log.json');
