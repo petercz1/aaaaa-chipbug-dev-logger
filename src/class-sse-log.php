@@ -24,7 +24,6 @@ class Sse_Log
 
             $options = \get_option('chipbug_logger_options');
             $refresh_rate = $options['refresh_rate'];
-            $refresh_rate = 500;
 
             if (\file_exists($_SERVER['DOCUMENT_ROOT'] . '/wp-content/log.json')) {
                 $this->data = \file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/wp-content/log.json');
