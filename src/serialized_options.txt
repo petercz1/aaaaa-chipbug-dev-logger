@@ -1,1 +1,1 @@
-a:5:{s:12:"refresh_rate";s:3:"500";s:11:"size_of_log";s:3:"100";s:13:"include_trace";s:4:"true";s:17:"include_file_path";s:4:"true";s:9:"file_path";s:83:"/home/pc/data/downloads/softwaredownloads/wordpress/installs/experiments/wordpress/";}
+a:5:{s:12:"refresh_rate";s:4:"2000";s:11:"size_of_log";s:3:"100";s:13:"include_trace";s:4:"true";s:17:"include_file_path";s:4:"true";s:9:"file_path";s:83:"/home/pc/data/downloads/softwaredownloads/wordpress/installs/experiments/wordpress/";}
