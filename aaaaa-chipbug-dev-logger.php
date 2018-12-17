@@ -24,6 +24,5 @@ $setup->init();
 require_once(__dir__ . '/src/function-writelog.php');
 
 // TODO - fix weird looping bug
-// TODO - standardise on logger vs debugger
 // TODO - testing
 // TODO - animated gif to demo
