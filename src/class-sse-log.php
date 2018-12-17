@@ -22,8 +22,8 @@ class Sse_Log
             // $path = preg_replace('/wp-content.*$/','',__DIR__);
             // include($path.'wp-load.php');
 
-            // $options = \get_option('chipbug_logger_options');
-            // $refresh_rate = $options['refresh_rate'];
+            $options = \get_option('chipbug_logger_options');
+            $refresh_rate = $options['refresh_rate'];
             $refresh_rate = 500;
 
             if (\file_exists($_SERVER['DOCUMENT_ROOT'] . '/wp-content/log.json')) {
