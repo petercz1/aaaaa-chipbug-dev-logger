@@ -1,3 +1,3 @@
 # WordPress debugger and logger
 
-Grabs all 15 php err
+Grabs all 15 php errors/
