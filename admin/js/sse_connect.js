@@ -8,7 +8,7 @@
 
   function do_setup() {
     counter = 0;
-    let eventSource = new EventSource('./../wp-content/plugins/aaaaa-chipbug-dev-logger/src/sse-setup.php');
+    let eventSource = new EventSource('./../wp-content/plugins/aaaaa-chipbug-dev-logger/classes/sse/sse-setup.php');
 
     eventSource.addEventListener("db_results", function (event) {
       console.log(event.data);
