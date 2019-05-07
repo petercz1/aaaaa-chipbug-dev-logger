@@ -41,10 +41,10 @@ class Manage_Options
       {
           try {
               if ($this->check_nonce()) {
-                  error_log(plugin_dir_path(__FILE__) . '/serialized_options.txt');
-                  $options = \file_get_contents( plugin_dir_path(__FILE__) . 'serialized_options.txt');
-                  $options = unserialize($options);
-				  echo json_encode($options);
+                  $options = \file_get_contents( plugin_dir_path(__FILE__) . 'serialized_options.json');
+                //   $options = json_decode($options);
+                //   echo json_encode($options);
+                  echo $options;
 				  //echo json_encode(get_option('chipbug_logger_options'));
 			  }
 			  die();
@@ -77,7 +77,7 @@ class Manage_Options
                     
                 }
                 error_log(print_r($_POST, true));
-                file_put_contents( plugin_dir_path(__FILE__) . 'serialized_options.txt', serialize( $options ) );
+                file_put_contents( plugin_dir_path(__FILE__) . 'serialized_options.json', json_encode( $options ) );
 				//update_option('chipbug_logger_options', $options);
             }
         } catch (Exception $ex) {

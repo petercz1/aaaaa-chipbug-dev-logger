@@ -7,7 +7,7 @@ Plugin name: WP Logger
 Description: Logs all PHP errors and exceptions & allows simple error logging using writelog('your message').
 Author: Peter Carroll
 Author URI: https://github.com/petercz1
-Version: 2.0.0
+Version: 3.0.0
 License:           GPL-2.0+
 License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
 */

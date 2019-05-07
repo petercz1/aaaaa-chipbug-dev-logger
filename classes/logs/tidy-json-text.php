@@ -16,9 +16,9 @@ class Tidy_Json_Text
 
     public function __construct()
     {
-        $this->options = \file_get_contents(plugin_dir_path(__DIR__) . 'install/serialized_options.txt');
+        $this->options = \file_get_contents(plugin_dir_path(__DIR__) . 'install/serialized_options.json');
 
-        $this->options = unserialize($this->options);
+        $this->options = json_decode($this->options, true);
 
         if ('false' == $this->options['include_file_path']) {
 			$this->file_path = $this->options['file_path'];

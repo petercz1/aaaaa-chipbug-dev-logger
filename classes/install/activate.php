@@ -41,18 +41,18 @@ class Activate
             self::$message .= '<p>Consider <a href="https://codex.wordpress.org/Upgrading_WordPress">updating your WordPress installation</a></p>';
         }
 
-        if (function_exists('writelog')) {
-            $reflectionFunc = new \ReflectionFunction('writelog');
-            $filename = $reflectionFunc->getFileName();
-            if(strpos($filename, 'aaaaa-chipbug-dev-logger/src/function-writelog.php') == false){
-                self::$problems = true;
-                $filename = str_replace(ABSPATH, '', $filename);
-                self::$message .= '<h2>Function writelog() is already in use</h2>';
-                self::$message .= '<p>This <strong>chipbug-dev-logger</strong> plugin uses a function called writelog()</p>';
-                self::$message .= '<p>writelog() is already used in ' . $filename . ' on line ' . $reflectionFunc->getStartLine() . '</p>';
-                self::$message .= '<p>If this location is in a plugin, consider disabling that plugin.</p>';
-            }
-        }
+        // if (function_exists('writelog')) {
+        //     $reflectionFunc = new \ReflectionFunction('writelog');
+        //     $filename = $reflectionFunc->getFileName();
+        //     if(strpos($filename, 'aaaaa-chipbug-dev-logger/src/function-writelog.php') == false){
+        //         self::$problems = true;
+        //         $filename = str_replace(ABSPATH, '', $filename);
+        //         self::$message .= '<h2>Function writelog() is already in use</h2>';
+        //         self::$message .= '<p>This <strong>chipbug-dev-logger</strong> plugin uses a function called writelog()</p>';
+        //         self::$message .= '<p>writelog() is already used in ' . $filename . ' on line ' . $reflectionFunc->getStartLine() . '</p>';
+        //         self::$message .= '<p>If this location is in a plugin, consider disabling that plugin.</p>';
+        //     }
+        // }
 
         $browser = new \Chipbug\Tools\Logger\Check_Browser();
         $browser_info = $browser->get_browser_info();
@@ -78,7 +78,7 @@ class Activate
             "include_file_path" => 'false',
             "file_path" =>  get_home_path()
         );
-        file_put_contents( plugin_dir_path(__DIR__) . 'install/serialized_options.txt');
+        file_put_contents( plugin_dir_path(__DIR__) . 'install/serialized_options.json', json_encode($options));
     }
 
     public static function install_problems(){

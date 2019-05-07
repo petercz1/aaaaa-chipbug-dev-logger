@@ -3,7 +3,7 @@
   /**
    * tries to alert user of refreshing the log window
    * if the development window has crashed. refreshing the log
-   * window will also crash so this pop-up ttries to remind the
+   * window will also crash so this pop-up reminds the
    * developer not to do it.
    * The problem is this pop-up may not work depending on
    * browser settings!
