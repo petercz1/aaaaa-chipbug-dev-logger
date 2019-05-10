@@ -5,7 +5,7 @@ namespace Chipbug\Tools\Logger;
 defined('ABSPATH') or die('No script kiddies please!');
 
 /**
- * checks 
+ * checks log.json exists - if not, creates an empty log
  */
 class Set_Files
 {
