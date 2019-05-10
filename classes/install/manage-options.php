@@ -41,7 +41,7 @@ class Manage_Options
       {
           try {
               if ($this->check_nonce()) {
-                  $options = \file_get_contents( plugin_dir_path(__FILE__) . 'serialized_options.json');
+                  $options = \file_get_contents( plugin_dir_path(__FILE__) . 'debugger_options.json');
                   echo $options;
 			  }
 			  die();
@@ -73,7 +73,7 @@ class Manage_Options
                     $options['file_path'] = get_home_path();
                     
                 }
-                file_put_contents( plugin_dir_path(__FILE__) . 'serialized_options.json', json_encode( $options ) );
+                file_put_contents( plugin_dir_path(__FILE__) . 'debugger_options.json', json_encode( $options ) );
             }
         } catch (Exception $ex) {
             error_log(get_class($this) . '::' . __FUNCTION__ . '()' . PHP_EOL . 'line ' . $ex->getLine() . ': ' . $ex->getMessage());
