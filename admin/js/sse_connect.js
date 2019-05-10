@@ -51,7 +51,6 @@
 
       } else {
         var css_class = 'php_' + data[counter].code.toLowerCase().replace(/ /g, "_");
-        console.log(css_class);
         line_one = `<div class="${css_class}">line ${data[counter].line} (${data[counter].code}) : ${data[counter].details} </div>`;
         line_two = '<div class="details">' + "file: " + data[counter].file + '</div>';
       }
