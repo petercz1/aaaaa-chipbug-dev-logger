@@ -19,10 +19,6 @@ class Sse_Log
     public function init()
     {
         try {
-            // required to use WP get_option() function
-            // $path = preg_replace('/wp-content.*$/','',__DIR__);
-            // include($path.'wp-load.php');
-
             $options = \file_get_contents( __DIR__ . '/../install/serialized_options.json');
             $options = json_decode($options, true);
             $refresh_rate = $options['refresh_rate'];
