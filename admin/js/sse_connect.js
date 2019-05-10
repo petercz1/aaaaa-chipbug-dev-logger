@@ -17,7 +17,6 @@
 
     eventSource.addEventListener("error", function (err) {
       if (eventSource.CLOSED) {
-        console.log('event source closed');
       }
     });
   }
