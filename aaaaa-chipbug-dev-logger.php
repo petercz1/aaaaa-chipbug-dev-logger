@@ -28,5 +28,4 @@ require_once(__dir__ . '/classes/logs/function-writelog.php');
 // TODO - fix weird looping bug
 // TODO - testing
 // TODO - animated gif to demo
-// TODO - log objects as well as arrays
 // TODO - make php 5.3+ compatible
