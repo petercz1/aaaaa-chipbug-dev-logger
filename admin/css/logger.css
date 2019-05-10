@@ -33,27 +33,27 @@
   border-collapse: collapse;
 }
 
-.php_user_notice,
+.php_e_user_notice,
 .php_developer {
   color: green;
 }
 
-.php_warning,
-.php_notice,
-.php_deprecated,
-.php_recoverable_error,
-.php_user_deprecated,
-.php_user_error,
-.php_user_warning {
+.php_e_warning,
+.php_e_notice,
+.php_e_deprecated,
+.php_e_recoverable_error,
+.php_e_user_deprecated,
+.php_e_user_error,
+.php_e_user_warning {
   color: blue;
 }
 
-.php_parse,
-.php_compile_error,
-.php_compile_warning,
-.php_core_error,
-.php_core_warning,
-.php_error,
-.php_strict {
+.php_e_parse,
+.php_e_compile_error,
+.php_e_compile_warning,
+.php_e_core_error,
+.php_e_core_warning,
+.php_e_error,
+.php_e_strict {
   color: red;
 }

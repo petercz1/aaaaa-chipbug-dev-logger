@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace Chipbug\Tools\Logger;
 
-error_log('sse log called');
 /**
  * sends log.json to client browser
  * fires every 500ms or user-set interval

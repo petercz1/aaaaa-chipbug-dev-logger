@@ -6,6 +6,7 @@ defined('ABSPATH') or die('No script kiddies please!');
 
 /**
  * replaces standard php error handlers
+ * builds a 'standard' $error array irrespective of error handler
  */
 class Php_Error_Handler
 {
@@ -16,14 +17,14 @@ class Php_Error_Handler
      *
      * @return void
      */
-    public function init(Manage_Logs $manage_logs, Mysql_Log $mysql_log)
+    public function init(Manage_Logs $manage_logs, Mysql_Log $mysql_log):void
     {
         try {
             $this->manage_logs = $manage_logs;
-            $this->manage_logs->init(new \Chipbug\Tools\Logger\Write_Json(), new \Chipbug\Tools\Logger\Write_Human());
             $this->mysql_log = $mysql_log;
-            set_error_handler(array($this,'error_handler')); // handles errors within script
-            register_shutdown_function(array($this, "shutdown_handler")); //executes if script shuts down
+
+            set_error_handler(array($this,'error_handler'));              // handles errors within script
+            register_shutdown_function(array($this, "shutdown_handler")); // executes if script shuts down
         } catch (Exception $ex) {
             error_log(get_class($this) . '::' . __FUNCTION__ . '()' . PHP_EOL . 'line ' . $ex->getLine() . ': ' . $ex->getMessage());
         }
@@ -33,18 +34,20 @@ class Php_Error_Handler
      * overrides php standard runtime error handler
      * @return void
      */
-    public function error_handler($errorno, $errstr, $errfile, $errline)
+    public function error_handler($errorno, $errstr, $errfile, $errline):void
     {
         try {
             // fix to stop simplepie 'bug' as reported here: https://core.trac.wordpress.org/ticket/29204
             if (false !== strpos($errstr, 'Non-static method WP_Feed_Cache::create() should not be called statically')) {
                 die;
             }
-            $error_name = $this->check_error($errorno);
-            // $file_path = str_replace(ABSPATH, '', $errfile);
-            $file_path = $errfile;
-            $message = array('error_name'=> $error_name, 'line_no'=>$errline, 'file'=>$file_path, 'details'=>$errstr);
-            $this->manage_logs->write($message);
+            $error = $this->check_error($errorno);
+            $error['line'] = $errline;
+            $error['file'] = $errfile;
+            $error['details'] = $errstr;
+
+            $this->manage_logs->write($error);
+            // check for any last error from MySQL
             if (\is_array($this->mysql_log->log())) {
                 $this->manage_logs->write($this->mysql_log->log());
             }
@@ -52,7 +55,7 @@ class Php_Error_Handler
             error_log(get_class($this) . '::' . __FUNCTION__ . '()' . PHP_EOL . 'line ' . $ex->getLine() . ': ' . $ex->getMessage());
         }
     }
-    
+  
     /**
      * traps errors that cause shutdown before code has time to finish
      * also runs mysql_log->db_log_log at the end
@@ -62,18 +65,15 @@ class Php_Error_Handler
     {
         try {
             if (!is_null(error_get_last())) {
-                error_log('shutdown_handler');
                 $lasterror = error_get_last();
-                $error_name = $this->check_error($lasterror['type']);
-                // $file_path = str_replace(ABSPATH, '', $lasterror['file']);
-                $file_path = $lasterror['file'];
-                //$lasterror['message'] = str_replace(ABSPATH , '', $lasterror['message']);
-                $message = array('error_name'=> $error_name, 'line_no'=>$lasterror['line'], 'file'=>$file_path, 'details'=>$lasterror['message']);
-                $this->manage_logs->write($message);
-                if (\is_array($this->mysql_log->log())) {
-                    $this->manage_logs->write($this->mysql_log->log());
-                }
+                $error = $this->check_error($lasterror['type']);
+                $error['line'] = $lasterror['line'];
+                $error['file'] = $lasterror['file'];
+                $error['details'] = $lasterror['message'];
+              
+                $this->manage_logs->write($error);
             }
+            // check for any last error from MySQL
             if (\is_array($this->mysql_log->log())) {
                 $this->manage_logs->write($this->mysql_log->log());
             }
@@ -83,32 +83,134 @@ class Php_Error_Handler
     }
 
     /**
-     * checks php error constant
+     * checks php error code
      * @return string error name or 'UNKNOWN ERROR'
      */
-    private function check_error($error_code)
+    private function check_error($error_code):array
     {
         $errtypes = array(
-        E_COMPILE_ERROR => 'compile error',
-        E_COMPILE_WARNING => 'compile warning',
-        E_CORE_ERROR => 'core error',
-        E_CORE_WARNING => 'core warning',
-        E_DEPRECATED => 'deprecated',
-        E_ERROR => 'error',
-        E_NOTICE => 'notice',
-        E_PARSE => 'parse',
-        E_RECOVERABLE_ERROR => 'recoverable error',
-        E_STRICT => 'strict',
-        E_USER_DEPRECATED => 'user deprecated',
-        E_USER_ERROR => 'user error',
-        E_USER_NOTICE => 'user notice',
-        E_USER_WARNING => 'user warning',
-        E_WARNING => 'warning',
-    );
+          E_ERROR =>
+          array(
+            'value' => 1,
+            'code' => 'E_ERROR',
+            'description' => 'Fatal run-time error',
+            'notes' => 'An error that can not be recovered from, such as a memory allocation problem. Execution of the script is halted.',
+          ),
+          E_WARNING =>
+          array(
+            'value' => 2,
+            'code' => 'E_WARNING',
+            'description' => 'Run-time warning',
+            'notes' => 'Non-fatal error - execution of the script is not halted.',
+          ),
+          E_PARSE =>
+          array(
+            'value' => 4,
+            'code' => 'E_PARSE',
+            'description' => 'Compile-time parse error',
+            'notes' => 'Parse errors should only be generated by the parser.',
+          ),
+          E_NOTICE =>
+          array(
+            'value' => 8,
+            'code' => 'E_NOTICE',
+            'description' => 'Run-time notice',
+            'notes' => 'Indicate that the script encountered something that could indicate an error, but could also happen in the normal course of running a script.',
+          ),
+          E_CORE_ERROR =>
+          array(
+            'value' => 16,
+            'code' => 'E_CORE_ERROR',
+            'description' => 'Fatal startup error',
+            'notes' => 'Fatal errors that occur during PHP\'s initial startup. This is like an E_ERROR, except it is generated by the core of PHP.',
+          ),
+          E_CORE_WARNING =>
+          array(
+            'value' => 32,
+            'code' => 'E_CORE_WARNING',
+            'description' => 'Warning startup error',
+            'notes' => 'Warnings (non-fatal errors) that occur during PHP\'s initial startup. This is like an E_WARNING, except it is generated by the core of PHP.',
+          ),
+          E_COMPILE_ERROR =>
+          array(
+            'value' => 64,
+            'code' => 'E_COMPILE_ERROR',
+            'description' => 'Fatal compile-time error',
+            'notes' => 'This is like an E_ERROR, except it is generated by the Zend Scripting Engine.',
+          ),
+          E_COMPILE_WARNING =>
+          array(
+            'value' => 128,
+            'code' => 'E_COMPILE_WARNING',
+            'description' => 'Compile-time warning',
+            'notes' => 'Non-fatal error - this is like an E_WARNING, except it is generated by the Zend Scripting Engine.',
+          ),
+          E_USER_ERROR =>
+          array(
+            'value' => 256,
+            'code' => 'E_USER_ERROR',
+            'description' => 'User-generated error message',
+            'notes' => 'This is like an E_ERROR, except it is generated in PHP code by using the PHP function trigger_error().',
+          ),
+          E_USER_WARNING =>
+          array(
+            'value' => 512,
+            'code' => 'E_USER_WARNING',
+            'description' => 'User-generated warning message',
+            'notes' => 'This is like an E_WARNING, except it is generated in PHP code by using the PHP function trigger_error().',
+          ),
+          E_USER_NOTICE =>
+          array(
+            'value' => 1024,
+            'code' => 'E_USER_NOTICE',
+            'description' => 'User-generated notice message',
+            'notes' => 'This is like an E_NOTICE, except it is generated in PHP code by using the PHP function trigger_error().',
+          ),
+          E_STRICT =>
+          array(
+            'value' => 2048,
+            'code' => 'E_STRICT',
+            'description' => 'Deprecated code',
+            'notes' => 'Indicates code usage which is deprecated or which may not be future-proof.',
+          ),
+          E_RECOVERABLE_ERROR =>
+          array(
+            'value' => 4096,
+            'code' => 'E_RECOVERABLE_ERROR',
+            'description' => 'Catchable fatal error',
+            'notes' => 'Indicates that a probably dangerous error occurred, but did not leave the Engine in an unstable state. If the error is not caught by a user defined handle (see also set_error_handler()), the application aborts as it was an E_ERROR.',
+          ),
+          E_DEPRECATED =>
+          array(
+            'value' => 8192,
+            'code' => 'E_DEPRECATED',
+            'description' => 'Run-time notice',
+            'notes' => 'Enable this to receive warnings about code that will not work in future versions.',
+          ),
+          E_USER_DEPRECATED =>
+          array(
+            'value' => 16384,
+            'code' => 'E_USER_DEPRECATED',
+            'description' => 'User-generated warning message',
+            'notes' => 'This is like an E_DEPRECATED, except it is generated in PHP code by using the PHP function trigger_error().',
+          ),
+          E_ALL =>
+          array(
+            'value' => 32767,
+            'code' => 'E_ALL',
+            'description' => 'All errors and warnings',
+            'notes' => 'All errors and warnings, as supported, except of level E_STRICT prior to PHP 5.4.0.',
+          ),
+        );
         if (array_key_exists($error_code, $errtypes)) {
             return $errtypes[$error_code];
         } else {
-            return 'unknown error';
+            return array(
+              'value' => 99999,
+              'code' => 'UNKNOWN',
+              'description' => 'unknown error',
+              'notes' => 'nothing known',
+            );
         }
     }
 }

@@ -3,8 +3,7 @@ declare(strict_types=1);
 namespace Chipbug\Tools\Logger;
 
 /**
- * sends log.json to client browser
- * fires every 500ms
+ * Writes developer checks to log
  */
 class Write_Log
 {
@@ -13,23 +12,19 @@ class Write_Log
     public function init(Manage_Logs $manage_logs)
     {
         $this->manage_logs = $manage_logs;
-        $this->manage_logs->init(new \Chipbug\Tools\Logger\Write_Json(), new \Chipbug\Tools\Logger\Write_Human());
-
     }
 
     public function write($note)
     {
         try {
-            //$manage_logs = new \Chipbug\Tools\Logger\Manage_Logs;
-            $file_name = '';
             $line_no = '';
+            $file_name = '';
             $backtrace = debug_backtrace();
             if (!empty($backtrace[1]) && is_array($backtrace[1])) {
-                $file_name = $backtrace[1]['file'];
                 $line_no = $backtrace[1]['line'];
+                $file_name = $backtrace[1]['file'];
             }
-
-            $message = array('error_name'=> 'developer', 'line_no'=>$line_no, 'file'=>$file_name);
+            $message = array('code'=> 'developer', 'line'=>$line_no, 'file'=>$file_name);
 
             // check what type of error/message we have
             if (is_array($note) || is_object($note)) {

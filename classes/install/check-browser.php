@@ -17,7 +17,7 @@ class Check_Browser
      * array('userAgent' => $u_agent,'name'=> $bname, 'version'=> $version, 'platform'=> $platform, 'pattern'=> $pattern)
      * @return array
      */
-    public function get_browser_info()
+    public function get_browser_info():array
     {
         $u_agent = $_SERVER['HTTP_USER_AGENT'];
         $bname = 'Unknown';

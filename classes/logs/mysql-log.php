@@ -13,12 +13,6 @@ class Mysql_Log
      * @var array $message contains default message.
      */
     public $message = array();
-    // public $message = array('error_name'=> 'MySQL', 'line_no'=>'', 'file'=>'', 'details'=>'test details');
-
-    // public function init(Manage_Logs $manage_logs)
-    // {
-    //     add_action('shutdown', array($this, 'db_log_log'));
-    // }
     
     /**
      * returns contents of $EZSQL_ERROR
@@ -38,7 +32,7 @@ class Mysql_Log
         try {
             //proceed if there were MySQL errors during runtime
             if (is_array($EZSQL_ERROR) && count($EZSQL_ERROR)) {
-                $this->message['error_name'] = 'MySQL';
+                $this->message['code'] = 'E_MYSQL';
                 $this->message['details'] =  $EZSQL_ERROR;
                 return $this->message;
             }

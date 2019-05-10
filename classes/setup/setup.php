@@ -28,7 +28,6 @@ class Setup
 
             $manage_options = new Manage_Options();
             $manage_options->init();
-
         } catch (\Exception $ex) {
             error_log(get_class($this) . '::' . __FUNCTION__ . '()' . PHP_EOL . 'line ' . $ex->getLine() . ': ' . $ex->getMessage());
         }

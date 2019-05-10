@@ -2,8 +2,6 @@
 
   // connects to server-sent events
 
-  console.log('loaded socket');
-
   $(document).ready(do_setup);
 
   function do_setup() {
@@ -11,16 +9,17 @@
     let eventSource = new EventSource('./../wp-content/plugins/aaaaa-chipbug-dev-logger/classes/sse/sse-setup.php');
 
     eventSource.addEventListener("db_results", function (event) {
-      console.log(event.data);
+      data = JSON.parse(event.data);
+      console.log(data);
       if (event.data != "{}") {
-        do_data(JSON.parse(event.data));
+        do_data(data);
       }
     });
 
     eventSource.addEventListener("error", function (err) {
       console.log('blow up... recover??');
       console.log(err);
-      if(eventSource.CLOSED){
+      if (eventSource.CLOSED) {
         console.log('event source closed');
       }
     });
@@ -29,6 +28,7 @@
   function do_data(data) {
     full_list = '';
     for (var counter = 0; counter < data.length; counter++) {
+      console.log(data[counter]);
       list = '<div class="item">';
       line_one = '';
       line_two = '';
@@ -47,15 +47,16 @@
       }
       if (data[counter].error_name == 'NEW LOG') {
         line_one = '<div class="php_new_log">NEW LOG</div>';
-      } else if ('MySQL' == data[counter].error_name) {
+      } else if ('E_MYSQL' == data[counter].code) {
         for (var mysql_counter = 0; mysql_counter < data[counter].details.length; mysql_counter++) {
           line_one = '<div class="php_mysql">MySQL: ' + data[counter].details[mysql_counter].query + '</div>';
           line_two = '<div class="php_mysql">' + data[counter].details[mysql_counter].error_str + '</div>';
         }
 
       } else {
-        var css_class = 'php_' + data[counter].error_name.toLowerCase().replace(/ /g, "_");
-        line_one = '<div class="' + css_class + '">' + "line " + data[counter].line_no + ", " +  ": " + data[counter].details + '</div>';
+        var css_class = 'php_' + data[counter].code.toLowerCase().replace(/ /g, "_");
+        console.log(css_class);
+        line_one = `<div class="${css_class}">line ${data[counter].line} (${data[counter].code}) : ${data[counter].details} </div>`;
         line_two = '<div class="details">' + "file: " + data[counter].file + '</div>';
       }
 

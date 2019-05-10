@@ -42,10 +42,7 @@ class Manage_Options
           try {
               if ($this->check_nonce()) {
                   $options = \file_get_contents( plugin_dir_path(__FILE__) . 'serialized_options.json');
-                //   $options = json_decode($options);
-                //   echo json_encode($options);
                   echo $options;
-				  //echo json_encode(get_option('chipbug_logger_options'));
 			  }
 			  die();
           } catch (Exception $ex) {
@@ -58,7 +55,7 @@ class Manage_Options
      * checks nonce first
      * @return void
     */
-    public function save_options()
+    public function save_options():void
     {
         // TODO - remove before release!
         \sleep(1);
@@ -76,9 +73,7 @@ class Manage_Options
                     $options['file_path'] = get_home_path();
                     
                 }
-                error_log(print_r($_POST, true));
                 file_put_contents( plugin_dir_path(__FILE__) . 'serialized_options.json', json_encode( $options ) );
-				//update_option('chipbug_logger_options', $options);
             }
         } catch (Exception $ex) {
             error_log(get_class($this) . '::' . __FUNCTION__ . '()' . PHP_EOL . 'line ' . $ex->getLine() . ': ' . $ex->getMessage());
@@ -89,7 +84,7 @@ class Manage_Options
      * checks nonce from ajax call
      * @return bool
      */
-    private function check_nonce()
+    private function check_nonce():bool
     {
 		if(isset($_POST['options_nonce'])){
 			$nonce = $_POST['options_nonce'];

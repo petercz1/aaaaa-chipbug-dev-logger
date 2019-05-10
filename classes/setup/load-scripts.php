@@ -12,9 +12,9 @@ class Load_Scripts{
 	 *
 	 * @return void
 	 */
-	public function init(Set_Files $set_files){
-        $this->set_files = $set_files;
-        $this->set_files->set();
+	public function init(){
+        // $this->set_files = $set_files;
+        // $this->set_files->set();
 		add_action('admin_enqueue_scripts', array($this, 'hook_my_js'));
         add_action('admin_enqueue_scripts', array($this, 'hook_my_css'));
 	}
@@ -60,11 +60,11 @@ class Load_Scripts{
     public function hook_my_css($hook)
     {
         if (is_admin() && $hook == 'developer_page_chipbug-logger') {
-            wp_enqueue_style('chipbug-errors-style', plugins_url() .('/admin/css/logger.css'));
+            error_log('URL: ' . plugins_url());
+            wp_enqueue_style('chipbug-errors-logger-style', plugins_url('/aaaaa-chipbug-dev-logger/admin/css/logger.css'));
         }
         if (is_admin() && $hook == 'developer_page_chipbug-logger-options') {
-            wp_enqueue_style('chipbug-errors-style', plugins_url() .('/admin/css/options.css'));
+            wp_enqueue_style('chipbug-errors-options-style', plugins_url('/aaaaa-chipbug-dev-logger/admin/css/options.css'));
         }
     }
-
 }
