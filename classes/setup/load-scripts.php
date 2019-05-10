@@ -13,8 +13,6 @@ class Load_Scripts{
 	 * @return void
 	 */
 	public function init(){
-        // $this->set_files = $set_files;
-        // $this->set_files->set();
 		add_action('admin_enqueue_scripts', array($this, 'hook_my_js'));
         add_action('admin_enqueue_scripts', array($this, 'hook_my_css'));
 	}
