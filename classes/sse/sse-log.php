@@ -19,7 +19,7 @@ class Sse_Log
     public function init()
     {
         try {
-            $options = \file_get_contents( __DIR__ . '/../install/serialized_options.json');
+            $options = \file_get_contents( __DIR__ . '/../install/debugger_options.json');
             $options = json_decode($options, true);
             $refresh_rate = $options['refresh_rate'];
 

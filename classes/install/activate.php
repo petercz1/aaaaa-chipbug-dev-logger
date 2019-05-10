@@ -5,84 +5,96 @@ namespace Chipbug\Tools\Logger;
 defined('ABSPATH') or die('No script kiddies please!');
 
 /**
- * install
- * sets up options, checks if writelog() function exists
+ * handles ajax call to delete logs
+ * human-readable /wp-content/log.txt is reset to ""
+ * json file /wp-content/log.json is reset to "[]"
  */
-class Activate
+class Manage_Options
 {
-    public static $message = '';
-    public static $problems = false;
     /**
-     * installs default options
-     * Checks for non-MS browser, php > 5.3, WP > 4.0, non-use of writelog() function
+     * @var Manage_Options
+     */
+    private $manage_options;
+    /**
+     * initialise
+     *
      * @return void
      */
-    public static function activate()
+    public function init()
     {
-        $php = '5.3';
-        $wp_req = '4.0.0';
-
-        if (version_compare(PHP_VERSION, $php, '<')) {
-            self::$problems = true;
-            deactivate_plugins(plugin_basename(__FILE__));
-            self::$message .= '<h2>Your version of PHP is too old for this plugin</h2>';
-            self::$message .= '<p>This <strong>chipbug-dev-logger</strong> plugin requires PHP version '.$php.' or greater.</p>';
-            self::$message .= '<p>Your server is currently running PHP version ' . PHP_VERSION . '</p>';
-            self::$message .= '<p>Consider <a href="https://wordpress.org/support/upgrade-php/">upgrading your installation of PHP</a>.';
-            $args = array('back_link'=>true);
-        }
-
-        global $wp_version;
-        if (version_compare($wp_version, $wp_req, '<')) {
-            self::$problems = true;
-            self::$message .= '<h2>Your version of WordPress is too old for this plugin</h2>';
-            self::$message .= '<p>This <strong>chipbug-dev-logger</strong> plugin requires WordPress version '.$wp_req.' or greater.</p>';
-            self::$message .= '<p>Your server is currently running WordPress version ' . $wp_version . '</p>';
-            self::$message .= '<p>Consider <a href="https://codex.wordpress.org/Upgrading_WordPress">updating your WordPress installation</a></p>';
-        }
-
-        // if (function_exists('writelog')) {
-        //     $reflectionFunc = new \ReflectionFunction('writelog');
-        //     $filename = $reflectionFunc->getFileName();
-        //     if(strpos($filename, 'aaaaa-chipbug-dev-logger/src/function-writelog.php') == false){
-        //         self::$problems = true;
-        //         $filename = str_replace(ABSPATH, '', $filename);
-        //         self::$message .= '<h2>Function writelog() is already in use</h2>';
-        //         self::$message .= '<p>This <strong>chipbug-dev-logger</strong> plugin uses a function called writelog()</p>';
-        //         self::$message .= '<p>writelog() is already used in ' . $filename . ' on line ' . $reflectionFunc->getStartLine() . '</p>';
-        //         self::$message .= '<p>If this location is in a plugin, consider disabling that plugin.</p>';
-        //     }
-        // }
-
-        $browser = new \Chipbug\Tools\Logger\Check_Browser();
-        $browser_info = $browser->get_browser_info();
-        if($browser_info['abbreviation'] == 'MSIE' || $browser_info['abbreviation'] == 'EDGE'){
-            self::$problems = true;
-            self::$message .= '<h2>Microsoft browsers do not currently support SSE</h2>';         
-            self::$message = '<p>This <strong>chipbug-dev-logger</strong> plugin uses ';
-            self::$message .= '<a href="https://en.wikipedia.org/wiki/Server-sent_events">Server-Sent Events.</a></p>';
-            self::$message .= '<p>At this point MicroSoft browsers do not support SSE\'s - please use Chrome/Firefox/Safari/Opera instead</p>';
-            self::$message .= '<p>(developers - I am aware of ';
-            self::$message .= '<a href="https://github.com/remy/polyfills/blob/master/EventSource.js">this polyfill</a>, ';
-            self::$message .= 'but at this stage I\'m not implementing it)';
-        }
-
-        if(self::$problems){
-            self::install_problems();
-        }
-
-        $options = array(
-            'refresh_rate'=>500,
-            "include_trace" => 'false',
-            "size_of_log" => 100,
-            "include_file_path" => 'false',
-            "file_path" =>  get_home_path()
-        );
-        file_put_contents( plugin_dir_path(__DIR__) . 'install/serialized_options.json', json_encode($options));
+        $this->add_action_for_manage_options();
+    }
+    /**
+     * adds ajax action
+     */
+    public function add_action_for_manage_options()
+    {
+        add_action('wp_ajax_get_options', array($this,'get_options'));
+        add_action('wp_ajax_save_options', array($this,'save_options'));
     }
 
-    public static function install_problems(){
-        deactivate_plugins(plugin_basename(__FILE__));
-        wp_die(self::$message, 'Plugin Activation Error', array('back_link'=>true));
+    /**
+    * called by ajax, gets options
+    * checks nonce first
+    * @return void
+     */
+    public function get_options()
+    {
+        try {
+            if ($this->check_nonce()) {
+                $options = \file_get_contents(plugin_dir_path(__FILE__) . 'debugger_options.json');
+                echo $options;
+            }
+            die();
+        } catch (Exception $ex) {
+            error_log(get_class($this) . '::' . __FUNCTION__ . '()' . PHP_EOL . 'line ' . $ex->getLine() . ': ' . $ex->getMessage());
+        }
+    }
+      
+    /**
+     * called by ajax, sets options
+     * checks nonce first
+     * @return void
+    */
+    public function save_options():void
+    {
+        // TODO - remove before release!
+        \sleep(1);
+        $error_message = '';
+        try {
+            if ($this->check_nonce()) {
+                // TODO - split this out for each option!
+                // TODO - code for size of log
+                // TODO - code for refresh rate
+                if (isset($_POST['size_of_log']) && \is_numeric($_POST['size_of_log'])) {
+                    $options['refresh_rate'] = $_POST['refresh_rate'];
+                    $options['size_of_log'] = $_POST['size_of_log'];
+                    $options['include_trace'] = $_POST['include_trace'];
+                    $options['include_file_path'] = $_POST['include_file_path'];
+                    $options['file_path'] = get_home_path();
+                }
+                file_put_contents(plugin_dir_path(__FILE__) . 'debugger_options.json', json_encode($options));
+            }
+        } catch (Exception $ex) {
+            error_log(get_class($this) . '::' . __FUNCTION__ . '()' . PHP_EOL . 'line ' . $ex->getLine() . ': ' . $ex->getMessage());
+        }
+    }
+    
+    /**
+     * checks nonce from ajax call
+     * @return bool
+     */
+    private function check_nonce():bool
+    {
+        if (isset($_POST['options_nonce'])) {
+            $nonce = $_POST['options_nonce'];
+        } elseif (isset($_GET['options_nonce'])) {
+            $nonce = $_GET['options_nonce'];
+        }
+        if (wp_verify_nonce($nonce, 'number_used_once')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
