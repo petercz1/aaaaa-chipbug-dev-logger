@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Chipbug\Tools\Logger;
 
 /**
- * Writes developer checks to log
+ * used by writelog() function
  */
 class Write_Log
 {
