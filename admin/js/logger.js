@@ -36,7 +36,6 @@
     };
     $.post(chipbug_dev.ajax_url, data)
       .fail(function (jqXHR, textStatus, err) {
-        console.log(err);
         if ('Internal Server Error' == err) {
           alert('error 500: WP has crashed.\nThis page will also crash if restarted now.\nLogger will try to keep reporting (crashes are in red)\nGet WP working again and then refresh!');
         } else {
