@@ -25,7 +25,6 @@
   function do_data(data) {
     full_list = '';
     for (var counter = 0; counter < data.length; counter++) {
-      console.log(data[counter]);
       list = '<div class="item">';
       line_one = '';
       line_two = '';
