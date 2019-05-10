@@ -5,7 +5,7 @@ namespace Chipbug\Tools\Logger;
 defined('ABSPATH') or die('No script kiddies please!');
 
 /**
- * handles writing of message array to json file
+ * checks 
  */
 class Set_Files
 {
