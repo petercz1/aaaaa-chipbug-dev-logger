@@ -10,7 +10,6 @@
 
     eventSource.addEventListener("db_results", function (event) {
       data = JSON.parse(event.data);
-      console.log(data);
       if (event.data != "{}") {
         do_data(data);
       }
